@@ -2,13 +2,10 @@ from flask import Flask, session, jsonify, request
 import pandas as pd
 import numpy as np
 import pickle
-import create_prediction_model
-import diagnosis 
-import predict_exited_from_saved_model
+from scoring import score_model
+from diagnostics import model_predictions, dataframe_summary, check_missing_data, execution_time
 import json
 import os
-
-
 
 ######################Set up variables for use in our script
 app = Flask(__name__)
@@ -24,27 +21,31 @@ prediction_model = None
 
 #######################Prediction Endpoint
 @app.route("/prediction", methods=['POST','OPTIONS'])
-def predict():        
-    #call the prediction function you created in Step 3
-    return #add return value for prediction outputs
+def predict():
+    p = request.get_json()["path"]       
+    df = pd.read_csv(p)
+    return model_predictions(df)
 
 #######################Scoring Endpoint
 @app.route("/scoring", methods=['GET','OPTIONS'])
 def stats():        
     #check the score of the deployed model
-    return #add return value (a single F1 score number)
+    return f"{score_model()}\n"
 
 #######################Summary Statistics Endpoint
 @app.route("/summarystats", methods=['GET','OPTIONS'])
-def stats():        
+def stats1():        
     #check means, medians, and modes for each column
-    return #return a list of all calculated summary statistics
+    return dataframe_summary()
 
 #######################Diagnostics Endpoint
 @app.route("/diagnostics", methods=['GET','OPTIONS'])
-def stats():        
+def stats2():        
     #check timing and percent NA values
-    return #add return value for all diagnostics
+    return {
+        "timing": execution_time(),
+        "na_values": check_missing_data(),
+    }
 
 if __name__ == "__main__":    
     app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)
