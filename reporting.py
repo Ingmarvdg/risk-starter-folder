@@ -41,7 +41,7 @@ def score_model():
 
     plot.plot()
 
-    plt.savefig(os.path.join(model_path, "confusionmatrix.png"))
+    plt.savefig(os.path.join(model_path, "confusionmatrix2.png"))
 
 if __name__ == '__main__':
     score_model()

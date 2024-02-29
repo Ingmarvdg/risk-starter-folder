@@ -64,7 +64,6 @@ def outdated_packages_list():
 
 
 if __name__ == '__main__':
-    model_predictions()
     dataframe_summary()
     execution_time()
     outdated_packages_list()

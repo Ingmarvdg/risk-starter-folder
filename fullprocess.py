@@ -4,7 +4,7 @@ import training
 import scoring
 import ingestion
 import deployment
-import diagnostics
+import apicalls
 import reporting
 from pathlib import Path
 import os
@@ -36,19 +36,14 @@ else:
 ##################Checking for model drift
 #check whether the score from the deployed model is different from the score from the model that uses the newest ingested data
 with open("production_deployment/latestscore.txt", "r") as f:
-    early_result = float(f.readline())
+    early_result = float(f.readlines()[-1])
 
-if scoring.score_model() < early_result: # if current score is lower
+if float(scoring.score_model()) < early_result: # if current score is lower
     training.train_model()
     deployment.store_model_into_pickle()
 else:
     exit()
 
 #run diagnostics.py and reporting.py for the re-deployed model
-
-
-
-
-
-
-
+reporting.score_model()
+apicalls.call_apis()
