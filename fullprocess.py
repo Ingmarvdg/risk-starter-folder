@@ -31,7 +31,7 @@ new_files = list(set(candidate_files) - set(existing_files))
 if len(new_files) > 0:
     ingestion.merge_multiple_dataframes()
 else:
-    exit()
+    pass
 
 ##################Checking for model drift
 #check whether the score from the deployed model is different from the score from the model that uses the newest ingested data
@@ -42,7 +42,7 @@ if float(scoring.score_model()) < early_result: # if current score is lower
     training.train_model()
     deployment.store_model_into_pickle()
 else:
-    exit()
+    pass
 
 #run diagnostics.py and reporting.py for the re-deployed model
 reporting.score_model()
